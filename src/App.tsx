@@ -20,9 +20,10 @@ import { MainTranslator } from './components/MainTranslator';
 import { ExcelManagerModal } from './components/ExcelManagerModal';
 import { QuickAddModal } from './components/QuickAddModal';
 import { InstallGuideModal } from './components/InstallGuideModal';
+import { LogoSettingsModal } from './components/LogoSettingsModal';
 
 export default function App() {
-  // Theme state (Dark Mode by default)
+  // Theme state (Dark Mode by default with Dikkan Orange accents)
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('office_dict_theme');
     if (saved) return saved === 'dark';
@@ -35,7 +36,7 @@ export default function App() {
   // Dictionary state (Loaded and remembered permanently via IndexedDB)
   const [entries, setEntries] = useState<DictionaryItem[]>(DEFAULT_OFFICE_DICTIONARY);
   const [meta, setMeta] = useState<DictionaryMeta | null>({
-    fileName: 'Temel Ofis Sözlüğü (Hazır)',
+    fileName: 'Dikkan Terim Sözlüğü (Hazır)',
     totalEntries: DEFAULT_OFFICE_DICTIONARY.length,
     lastUpdated: Date.now(),
     columns: ['İngilizce', 'Türkçe', 'Kategori'],
@@ -58,7 +59,9 @@ export default function App() {
   const [isExcelModalOpen, setIsExcelModalOpen] = useState<boolean>(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState<boolean>(false);
   const [isInstallGuideOpen, setIsInstallGuideOpen] = useState<boolean>(false);
+  const [isLogoSettingsOpen, setIsLogoSettingsOpen] = useState<boolean>(false);
   const [prefilledAddWord, setPrefilledAddWord] = useState<string>('');
+  const [logoVersion, setLogoVersion] = useState<number>(0);
 
   // Handle Dark Mode class on HTML and body
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function App() {
         } else {
           // Store default dictionary to IndexedDB so it's ready offline
           const initialMeta: DictionaryMeta = {
-            fileName: 'Temel Ofis Sözlüğü (Hazır)',
+            fileName: 'Dikkan Terim Sözlüğü (Hazır)',
             totalEntries: DEFAULT_OFFICE_DICTIONARY.length,
             lastUpdated: Date.now(),
             columns: ['İngilizce', 'Türkçe', 'Kategori'],
@@ -171,7 +174,7 @@ export default function App() {
     await clearAllDictionary();
     setActiveFileHandle(null);
     const initialMeta: DictionaryMeta = {
-      fileName: 'Temel Ofis Sözlüğü (Hazır)',
+      fileName: 'Dikkan Terim Sözlüğü (Hazır)',
       totalEntries: DEFAULT_OFFICE_DICTIONARY.length,
       lastUpdated: Date.now(),
       columns: ['İngilizce', 'Türkçe', 'Kategori'],
@@ -195,7 +198,7 @@ export default function App() {
     const updatedMeta = meta
       ? { ...meta, totalEntries: updated.length, lastUpdated: Date.now() }
       : {
-          fileName: 'Guncel_Ofis_Sozlugu.xlsx',
+          fileName: 'dikkan_sozluk.xlsx',
           totalEntries: updated.length,
           lastUpdated: Date.now(),
           columns: ['İngilizce', 'Türkçe'],
@@ -218,7 +221,7 @@ export default function App() {
   };
 
   const handleExportCurrentExcel = () => {
-    exportCurrentDictionaryToExcel(entries, meta?.fileName || 'guncel_ofis_sozluk.xlsx');
+    exportCurrentDictionaryToExcel(entries, meta?.fileName || 'dikkan_sozluk.xlsx');
   };
 
   const handleToggleDirection = () => {
@@ -230,7 +233,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors antialiased selection:bg-emerald-500/20 selection:text-emerald-700 dark:selection:text-emerald-300">
+    <div 
+      key={logoVersion}
+      className="min-h-screen flex flex-col bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors antialiased"
+      style={{
+        accentColor: '#ec691f'
+      }}
+    >
       
       {/* 1. STICKY TOP QUICK BAR */}
       <TopQuickBar
@@ -240,7 +249,7 @@ export default function App() {
         onCopyResult={handleCopyText}
         isCopied={isCopied}
         totalTerms={entries.length}
-        fileName={meta?.fileName || 'Sözlük'}
+        fileName={meta?.fileName || 'Dikkan Sözlüğü'}
         onOpenExcelModal={() => setIsExcelModalOpen(true)}
         onOpenQuickAdd={() => {
           setPrefilledAddWord('');
@@ -248,6 +257,7 @@ export default function App() {
         }}
         onExportExcel={handleExportCurrentExcel}
         onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
+        onOpenLogoSettings={() => setIsLogoSettingsOpen(true)}
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
       />
@@ -269,27 +279,36 @@ export default function App() {
         />
       </main>
 
-      {/* 3. ULTRA MINIMAL FOOTER */}
+      {/* 3. FOOTER */}
       <footer className="py-2.5 px-4 border-t border-zinc-200 dark:border-zinc-800/80 bg-white/50 dark:bg-zinc-950 text-center text-xs text-zinc-500 dark:text-zinc-400 flex flex-wrap items-center justify-between gap-2 max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ec691f' }} />
           <span>
             {activeFileHandle ? (
-              <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">
-                🟢 Bilgisayardaki Excel Dosyasına Doğrudan Bağlı (Otomatik Kaydedilir)
+              <strong className="font-semibold" style={{ color: '#ec691f' }}>
+                🟢 Dikkan Excel Dosyasına Doğrudan Bağlı (Otomatik Kaydedilir)
               </strong>
             ) : (
-              '%100 Çevrimdışı &bull; Yönetici İzni Gerekmez &bull; Excel Hafızada Kayıtlı'
+              'Dikkan Terim Sözlüğü &bull; %100 Çevrimdışı &bull; Yönetici İzni Gerekmez'
             )}
           </span>
         </div>
 
         <div className="flex items-center gap-3 text-[11px]">
           <button
-            onClick={() => setIsInstallGuideOpen(true)}
-            className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+            onClick={() => setIsLogoSettingsOpen(true)}
+            className="font-semibold hover:underline cursor-pointer"
+            style={{ color: '#ec691f' }}
           >
-            Masaüstüne Al &amp; Kurulum Rehberi
+            🎨 Dikkan Logo Yükle
+          </button>
+          <span>&bull;</span>
+          <button
+            onClick={() => setIsInstallGuideOpen(true)}
+            className="font-semibold hover:underline cursor-pointer"
+            style={{ color: '#ec691f' }}
+          >
+            Masaüstü Kurulumu
           </button>
         </div>
       </footer>
@@ -310,7 +329,7 @@ export default function App() {
         prefilledWord={prefilledAddWord}
         onAddEntry={handleAddQuickEntry}
         allEntries={entries}
-        currentFileName={meta?.fileName || 'guncel_ofis_sozluk.xlsx'}
+        currentFileName={meta?.fileName || 'dikkan_sozluk.xlsx'}
         activeFileHandle={activeFileHandle}
       />
 
@@ -318,6 +337,13 @@ export default function App() {
         isOpen={isInstallGuideOpen}
         onClose={() => setIsInstallGuideOpen(false)}
         appUrl={window.location.href}
+        onOpenLogoSettings={() => setIsLogoSettingsOpen(true)}
+      />
+
+      <LogoSettingsModal
+        isOpen={isLogoSettingsOpen}
+        onClose={() => setIsLogoSettingsOpen(false)}
+        onLogosUpdated={() => setLogoVersion(v => v + 1)}
       />
 
     </div>

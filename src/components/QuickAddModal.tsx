@@ -63,7 +63,6 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
     const updatedList = [newItem, ...allEntries];
 
     try {
-      // If connected directly to physical Excel file on disk:
       if (activeFileHandle) {
         await writeDirectlyToFileHandle(activeFileHandle, updatedList);
         setSavedSuccessMsg(`Yeni terim "${currentFileName}" dosyanıza doğrudan kaydedildi!`);
@@ -89,7 +88,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   };
 
   const handleManualExport = () => {
-    exportCurrentDictionaryToExcel(allEntries, currentFileName || 'guncel_ofis_sozluk.xlsx');
+    exportCurrentDictionaryToExcel(allEntries, currentFileName || 'dikkan_sozluk.xlsx');
   };
 
   return (
@@ -99,14 +98,14 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900">
           <div className="flex items-center gap-2">
-            <PlusCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <PlusCircle className="w-5 h-5" style={{ color: '#ec691f' }} />
             <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-100">
-              Yeni Terim Ekle
+              Dikkan Sözlüğüne Yeni Terim Ekle
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+            className="p-1 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -117,15 +116,22 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           
           {/* File connection status badge */}
           {activeFileHandle ? (
-            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 flex items-center gap-2 text-xs">
-              <HardDrive className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div 
+              className="p-2.5 rounded-xl border flex items-center gap-2 text-xs"
+              style={{
+                backgroundColor: 'rgba(236, 105, 31, 0.08)',
+                borderColor: 'rgba(236, 105, 31, 0.3)',
+                color: '#ec691f'
+              }}
+            >
+              <HardDrive className="w-4 h-4 shrink-0" />
               <span>
                 <strong>{currentFileName}</strong> dosyasına doğrudan canlı bağlı. Kaydettiğinizde dosyanız hemen güncellenir.
               </span>
             </div>
           ) : (
             <div className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 text-xs">
-              Terim tarayıcı hafızasına kaydedilecektir. Excel dosyanızın doğrudan üzerine yazılmasını isterseniz üst menüden &ldquo;Doğrudan Excel Dosyasına Bağlan&rdquo; seçeneğini kullanabilirsiniz.
+              Terim Dikkan yerel hafızasına kaydedilecektir. Excel dosyanızın doğrudan üzerine yazılmasını isterseniz üst menüden &ldquo;Doğrudan Excel Dosyasına Bağlan&rdquo; seçeneğini kullanabilirsiniz.
             </div>
           )}
 
@@ -137,8 +143,15 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           )}
 
           {savedSuccessMsg && (
-            <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-200 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+            <div 
+              className="p-2.5 rounded-lg border flex items-center gap-2"
+              style={{
+                backgroundColor: 'rgba(236, 105, 31, 0.1)',
+                borderColor: 'rgba(236, 105, 31, 0.4)',
+                color: '#ec691f'
+              }}
+            >
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{savedSuccessMsg}</span>
             </div>
           )}
@@ -151,8 +164,10 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               type="text"
               value={source}
               onChange={(e) => setSource(e.target.value)}
-              placeholder="Örn: Action Item"
-              className="w-full p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              placeholder="Örn: Gate Valve"
+              className="w-full p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-medium focus:outline-none"
+              onFocus={(e) => (e.target.style.borderColor = '#ec691f')}
+              onBlur={(e) => (e.target.style.borderColor = '')}
               autoFocus
             />
           </div>
@@ -165,8 +180,10 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               type="text"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              placeholder="Örn: Aksiyon Maddesi / Yapılacak İş"
-              className="w-full p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              placeholder="Örn: Sürgülü Vana"
+              className="w-full p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-medium focus:outline-none"
+              onFocus={(e) => (e.target.style.borderColor = '#ec691f')}
+              onBlur={(e) => (e.target.style.borderColor = '')}
             />
           </div>
 
@@ -179,8 +196,10 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                placeholder="Örn: Toplantı"
-                className="w-full p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100"
+                placeholder="Örn: Ürün / Vana"
+                className="w-full p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none"
+                onFocus={(e) => (e.target.style.borderColor = '#ec691f')}
+                onBlur={(e) => (e.target.style.borderColor = '')}
               />
             </div>
             <div>
@@ -191,8 +210,10 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Örn: Sık kullanılır"
-                className="w-full p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100"
+                placeholder="Örn: Fabrika üretimi"
+                className="w-full p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none"
+                onFocus={(e) => (e.target.style.borderColor = '#ec691f')}
+                onBlur={(e) => (e.target.style.borderColor = '')}
               />
             </div>
           </div>
@@ -201,7 +222,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
             <button
               type="button"
               onClick={handleManualExport}
-              className="text-[11px] text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1"
+              className="text-[11px] hover:underline flex items-center gap-1 cursor-pointer"
+              style={{ color: '#ec691f' }}
             >
               <Download className="w-3.5 h-3.5" />
               Yedek Excel İndir
@@ -212,14 +234,17 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 type="button"
                 onClick={onClose}
                 disabled={isSaving}
-                className="px-3 py-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="px-3 py-1.5 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 İptal
               </button>
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-xs transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-white font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+                style={{ backgroundColor: '#ec691f' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#d85810')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ec691f')}
               >
                 <Check className="w-3.5 h-3.5" />
                 {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
