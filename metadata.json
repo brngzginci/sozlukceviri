@@ -1,6 +1,6 @@
 {
-  "name": "Hızlı Ofis Çeviri ve Sözlük",
-  "description": "Yönetici izni gerektirmeyen, tamamen çevrimdışı çalışan, Excel veritabanlı hızlı Türkçe-İngilizce eşleme ve tek tıkla kopyalama aracı.",
+  "name": "Dikkan Terim Sözlüğü",
+  "description": "Dikkan kurumsal terim ve çeviri sözlüğü. Excel veritabanlı, çevrimdışı ve tek tıkla kopyalama özellikli.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
