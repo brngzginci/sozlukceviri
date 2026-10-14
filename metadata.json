@@ -1,0 +1,6 @@
+{
+  "name": "Hızlı Ofis Çeviri ve Sözlük",
+  "description": "Yönetici izni gerektirmeyen, tamamen çevrimdışı çalışan, Excel veritabanlı hızlı Türkçe-İngilizce eşleme ve tek tıkla kopyalama aracı.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
